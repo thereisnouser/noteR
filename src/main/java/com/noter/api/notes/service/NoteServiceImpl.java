@@ -1,7 +1,7 @@
-package com.noter.api.service;
+package com.noter.api.notes.service;
 
-import com.noter.api.model.Note;
-import com.noter.api.repository.NoteRepository;
+import com.noter.api.notes.model.Note;
+import com.noter.api.notes.repository.NoteRepository;
 import java.util.Date;
 import java.util.List;
 import javax.transaction.Transactional;

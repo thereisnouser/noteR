@@ -1,6 +1,6 @@
-package com.noter.api.repository;
+package com.noter.api.notes.repository;
 
-import com.noter.api.model.Note;
+import com.noter.api.notes.model.Note;
 import java.util.List;
 import javax.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;

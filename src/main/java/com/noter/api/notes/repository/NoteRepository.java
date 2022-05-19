@@ -1,6 +1,6 @@
-package com.noter.api.repository;
+package com.noter.api.notes.repository;
 
-import com.noter.api.model.Note;
+import com.noter.api.notes.model.Note;
 import java.util.List;
 
 public interface NoteRepository {
