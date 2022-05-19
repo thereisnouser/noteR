@@ -1,4 +1,4 @@
-package com.noter.api.model;
+package com.noter.api.notes.model;
 
 import java.util.Date;
 import javax.persistence.Column;

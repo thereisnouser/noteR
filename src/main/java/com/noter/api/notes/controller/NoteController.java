@@ -1,7 +1,7 @@
-package com.noter.api.controller;
+package com.noter.api.notes.controller;
 
-import com.noter.api.model.Note;
-import com.noter.api.service.NoteService;
+import com.noter.api.notes.model.Note;
+import com.noter.api.notes.service.NoteService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

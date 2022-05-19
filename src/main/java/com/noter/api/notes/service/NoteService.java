@@ -1,6 +1,6 @@
-package com.noter.api.service;
+package com.noter.api.notes.service;
 
-import com.noter.api.model.Note;
+import com.noter.api.notes.model.Note;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 
