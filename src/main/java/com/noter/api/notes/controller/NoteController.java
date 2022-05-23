@@ -2,6 +2,7 @@ package com.noter.api.notes.controller;
 
 import com.noter.api.notes.model.Note;
 import com.noter.api.notes.service.NoteService;
+import com.noter.util.EndpointPath;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/notes")
+@RequestMapping(EndpointPath.NOTES)
 public class NoteController {
     
     @Autowired
