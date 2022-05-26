@@ -1,12 +1,12 @@
 package com.noter.api.security;
 
-import com.noter.api.auth.UserService;
+import com.noter.api.users.service.UserService;
 import static com.noter.api.security.UserPermission.NOTE_CREATE;
 import static com.noter.api.security.UserPermission.NOTE_UPDATE;
 import static com.noter.api.security.UserPermission.USER_CREATE;
 import static com.noter.api.security.UserPermission.USER_READ;
 import static com.noter.api.security.UserRole.ADMIN;
-import com.noter.util.EndpointPath;
+import com.noter.api.shared.EndpointPath;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;

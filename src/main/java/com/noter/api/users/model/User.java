@@ -1,64 +1,68 @@
 package com.noter.api.users.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonProperty.Access;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import java.util.Collection;
+import java.util.Set;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
-@Entity
-@Table(name = "users")
-public class User {
+public class User implements UserDetails {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private int id;
-    
-    @Column(name = "name")
-    private String name;
-    
-    @JsonProperty(access = Access.WRITE_ONLY)
-    @Column(name = "password")
-    private String password;
-    
-    public User() {
-    }
-    
-    public User(String name, String password) {
-        this.name = name;
-        this.password = password;
-    }
+	private final String username;
+	private final String password;
+	private final Set<? extends GrantedAuthority> grantedAuthorities;
+	private final boolean isAccountNonExpired;
+	private final boolean isAccountNonLocked;
+	private final boolean isCredentialsNonExpired;
+	private final boolean isEnabled;
 
-    public int getId() {
-        return id;
-    }
+	public User(final String username,
+				final String password,
+				final Set<? extends GrantedAuthority> grantedAuthorities,
+				final boolean isAccountNonExpired,
+				final boolean isAccountNonLocked,
+				final boolean isCredentialsNonExpired,
+				final boolean isEnabled) {
+		this.username = username;
+		this.password = password;
+		this.grantedAuthorities = grantedAuthorities;
+		this.isAccountNonExpired = isAccountNonExpired;
+		this.isAccountNonLocked = isAccountNonLocked;
+		this.isCredentialsNonExpired = isCredentialsNonExpired;
+		this.isEnabled = isEnabled;
+	}
 
-    public void setId(int id) {
-        this.id = id;
-    }
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		return this.grantedAuthorities;
+	}
 
-    public String getName() {
-        return name;
-    }
+	@Override
+	public String getPassword() {
+		return this.password;
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	@Override
+	public String getUsername() {
+		return this.username;
+	}
 
-    public String getPassword() {
-        return password;
-    }
+	@Override
+	public boolean isAccountNonExpired() {
+		return this.isAccountNonExpired;
+	}
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
+	@Override
+	public boolean isAccountNonLocked() {
+		return this.isAccountNonLocked;
+	}
 
-    @Override
-    public String toString() {
-        return "User{" + "id=" + id + ", name=" + name + '}';
-    }
+	@Override
+	public boolean isCredentialsNonExpired() {
+		return this.isCredentialsNonExpired;
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return this.isEnabled;
+	}
 }
