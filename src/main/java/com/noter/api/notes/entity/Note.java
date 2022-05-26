@@ -11,37 +11,37 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "notes")
 public class Note {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
-    
+
     @Column(name = "text")
     private String text;
-    
+
     @Column(name = "createdAt")
     private LocalDateTime createdAt;
-    
+
     @Column(name = "updatedAt")
     private LocalDateTime updatedAt;
-    
+
     public Note() {
     }
 
     public Note(final String text,
-				final LocalDateTime createdAt,
-				final LocalDateTime updatedAt) {
+                final LocalDateTime createdAt,
+                final LocalDateTime updatedAt) {
         this.text = text;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
 
     public Note(final Long id,
-				final String text,
-				final LocalDateTime createdAt,
-				final LocalDateTime updatedAt) {
-		this.id = id;
+                final String text,
+                final LocalDateTime createdAt,
+                final LocalDateTime updatedAt) {
+        this.id = id;
         this.text = text;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
@@ -82,9 +82,9 @@ public class Note {
     @Override
     public String toString() {
         return "NoteEntity{"
-                + "id=" + id
-                + ", text=" + text
-                + ", createdAt="+ createdAt
-                + ", updatedAt=" + updatedAt + '}';
+               + "id=" + id
+               + ", text=" + text
+               + ", createdAt=" + createdAt
+               + ", updatedAt=" + updatedAt + '}';
     }
 }

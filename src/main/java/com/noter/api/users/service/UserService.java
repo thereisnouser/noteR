@@ -11,17 +11,17 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserService implements UserDetailsService {
 
-	private final UserDao userDao;
+    private final UserDao userDao;
 
-	@Autowired
-	public UserService(@Qualifier("fake") final UserDao userDao) {
-		this.userDao = userDao;
-	}
+    @Autowired
+    public UserService(@Qualifier("fake") final UserDao userDao) {
+        this.userDao = userDao;
+    }
 
-	@Override
-	public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException {
-		return userDao
-			.getUserByName(username)
-			.orElseThrow(() -> new UsernameNotFoundException(String.format("Username %s not found", username)));
-	}
+    @Override
+    public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException {
+        return userDao
+            .getUserByName(username)
+            .orElseThrow(() -> new UsernameNotFoundException(String.format("Username %s not found", username)));
+    }
 }

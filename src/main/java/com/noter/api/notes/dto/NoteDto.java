@@ -6,65 +6,65 @@ import com.noter.api.notes.entity.Note;
 import java.time.LocalDateTime;
 
 public class NoteDto {
-	
-	private Long id;
-	private String text;
 
-	@JsonProperty(access = Access.READ_ONLY)
-	private LocalDateTime createdAt;
+    private Long id;
+    private String text;
 
-	@JsonProperty(access = Access.READ_ONLY)
-	private LocalDateTime updatedAt;
+    @JsonProperty(access = Access.READ_ONLY)
+    private LocalDateTime createdAt;
 
-	public NoteDto() {
-	}
+    @JsonProperty(access = Access.READ_ONLY)
+    private LocalDateTime updatedAt;
 
-	public NoteDto(final Long id,
-				   final String text,
-				   final LocalDateTime createdAt,
-				   final LocalDateTime updatedAt) {
-		this.id = id;
-		this.text = text;
-		this.createdAt = createdAt;
-		this.updatedAt = updatedAt;
-	}
+    public NoteDto() {
+    }
 
-	public NoteDto(final Note entity) {
-		this.id = entity.getId();
-		this.text = entity.getText();
-		this.createdAt = entity.getCreatedAt();
-		this.updatedAt = entity.getUpdatedAt();
-	}
+    public NoteDto(final Long id,
+                   final String text,
+                   final LocalDateTime createdAt,
+                   final LocalDateTime updatedAt) {
+        this.id = id;
+        this.text = text;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+    }
 
-	public Long getId() {
-		return id;
-	}
+    public NoteDto(final Note entity) {
+        this.id = entity.getId();
+        this.text = entity.getText();
+        this.createdAt = entity.getCreatedAt();
+        this.updatedAt = entity.getUpdatedAt();
+    }
 
-	public void setId(final Long id) {
-		this.id = id;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public String getText() {
-		return text;
-	}
+    public void setId(final Long id) {
+        this.id = id;
+    }
 
-	public void setText(final String text) {
-		this.text = text;
-	}
+    public String getText() {
+        return text;
+    }
 
-	public LocalDateTime getCreatedAt() {
-		return createdAt;
-	}
+    public void setText(final String text) {
+        this.text = text;
+    }
 
-	public void setCreatedAt(final LocalDateTime createdAt) {
-		this.createdAt = createdAt;
-	}
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
 
-	public LocalDateTime getUpdatedAt() {
-		return updatedAt;
-	}
+    public void setCreatedAt(final LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
 
-	public void setUpdatedAt(final LocalDateTime updatedAt) {
-		this.updatedAt = updatedAt;
-	}
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(final LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
 }
