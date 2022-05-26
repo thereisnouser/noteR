@@ -15,44 +15,42 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 public enum UserRole {
 
-	GUEST(new HashSet<UserPermission>(Arrays.asList(
-		NOTE_READ,
-		USER_READ,
-		USER_CREATE
-	))),
+    GUEST(new HashSet<UserPermission>(Arrays.asList(
+        NOTE_READ,
+        USER_READ,
+        USER_CREATE
+    ))),
+    USER(new HashSet<UserPermission>(Arrays.asList(
+        NOTE_READ,
+        NOTE_CREATE,
+        NOTE_UPDATE,
+        USER_READ
+    ))),
+    ADMIN(new HashSet<UserPermission>(Arrays.asList(
+        NOTE_READ,
+        NOTE_DELETE,
+        USER_READ,
+        USER_CREATE,
+        USER_DELETE
+    )));
 
-	USER(new HashSet<UserPermission>(Arrays.asList(
-		NOTE_READ,
-		NOTE_CREATE,
-		NOTE_UPDATE,
-		USER_READ
-	))),
+    private Set<UserPermission> permissions;
 
-	ADMIN(new HashSet<UserPermission>(Arrays.asList(
-		NOTE_READ,
-		NOTE_DELETE,
-		USER_READ,
-		USER_CREATE,
-		USER_DELETE
-	)));
+    private UserRole(final Set<UserPermission> permissions) {
+        this.permissions = permissions;
+    }
 
-	private Set<UserPermission> permissions;
+    public Set<UserPermission> getPermissions() {
+        return this.permissions;
+    }
 
-	private UserRole(final Set<UserPermission> permissions) {
-		this.permissions = permissions;
-	}
+    public Set<SimpleGrantedAuthority> getAuthorities() {
+        final Set<SimpleGrantedAuthority> authorities = this.getPermissions().stream()
+            .map(permission -> new SimpleGrantedAuthority(permission.getPermission()))
+            .collect(Collectors.toSet());
 
-	public Set<UserPermission> getPermissions() {
-		return this.permissions;
-	}
+        authorities.add(new SimpleGrantedAuthority("ROLE_" + this.name()));
 
-	public Set<SimpleGrantedAuthority> getAuthorities() {
-		final Set<SimpleGrantedAuthority> authorities = this.getPermissions().stream()
-			.map(permission -> new SimpleGrantedAuthority(permission.getPermission()))
-			.collect(Collectors.toSet());
-
-		authorities.add(new SimpleGrantedAuthority("ROLE_" + this.name()));
-
-		return authorities;
-	}
+        return authorities;
+    }
 }
