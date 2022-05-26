@@ -1,70 +1,88 @@
 package com.noter.api.notes.service;
 
-import com.noter.api.notes.model.Note;
-import com.noter.api.notes.repository.NoteRepository;
-import java.util.Date;
+import com.noter.api.notes.entity.Note;
 import java.util.List;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import com.noter.api.notes.dao.NoteDao;
+import com.noter.api.notes.dto.NoteDto;
+import com.noter.api.notes.exception.BadRequestException;
+import com.noter.api.notes.exception.NoteNotFoundException;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
 public class NoteServiceImpl implements NoteService {
     
+    private final NoteDao noteDao;
+
     @Autowired
-    private NoteRepository noteRepository;
+	public NoteServiceImpl(final NoteDao noteDao) {
+		this.noteDao = noteDao;
+	}
     
     @Override
-    public List<Note> getAllNotes() {
-        return noteRepository.getAllNotes();
+    public List<NoteDto> getAllNotes() {
+        final List<Note> notesList = noteDao.getAllNotes();
+
+		return notesList.stream()
+			.map(NoteDto::new)
+			.collect(Collectors.toList());
     }
 
     @Override
-    public Note getNote(final int id) {
-        return noteRepository.getNote(id);
+    public NoteDto getNoteById(final Long id) {
+		if (id == null) {
+			throw new BadRequestException("Set correct value for the 'id'");
+		}
+
+		final Note note = noteDao.getNoteById(id);
+
+		if (note == null) {
+			throw new NoteNotFoundException("Note with id = " + id + " is not found");
+		}
+
+        return new NoteDto(note);
     }
 
     @Override
-    public ResponseEntity createNote(final Note note) {
-        final Date currentDate = new Date();
-        
-        if (note.getCreatedDate() == null) {
-            note.setCreatedDate(currentDate);
-        }
-        if (note.getUpdatedDate() == null) {
-            note.setUpdatedDate(currentDate);
-        }
-        
-        noteRepository.createNote(note);
-        
-        return ResponseEntity.ok("Note is created successfully!");
+    public NoteDto createNote(final NoteDto noteDto) {
+        final LocalDateTime currentUTCDateTime = LocalDateTime.now(ZoneOffset.UTC);
+		final Note note = new Note(noteDto.getText(), currentUTCDateTime, currentUTCDateTime);
+
+        noteDao.createNote(note);
+
+		return noteDto;
     }
 
     @Override
-    public ResponseEntity updateNote(final Note note) {
-        final boolean noteToUpdateIsExist = this.getNote(note.getId()) != null;
+    public NoteDto updateNote(final NoteDto noteDto) {
+		final Long id = noteDto.getId();
+        final NoteDto noteToUpdateDto = this.getNoteById(id);
+		final LocalDateTime currentUTCDateTime = LocalDateTime.now(ZoneOffset.UTC);
+		final Note note = new Note(noteDto.getId(),
+								   noteDto.getText(),
+								   noteToUpdateDto.getCreatedAt(),
+								   currentUTCDateTime);
         
-        if (!noteToUpdateIsExist) {
-            return ResponseEntity.badRequest().body("Set correct value for the 'id'");
-        } else if (note.getCreatedDate() != null) {
-            return ResponseEntity.badRequest().body("You can not modify the 'createdDate'");
-        }
-        
-        noteRepository.updateNote(note);
-        
-        return ResponseEntity.ok("Note is updated successfully!");
+        noteDao.updateNote(note);
+
+		return new NoteDto(note);
     }
 
     @Override
-    public ResponseEntity deleteNote(final int id) {
-        if (this.getNote(id) == null) {
-            return ResponseEntity.badRequest().body("Set correct value for the 'id'");
-        }
+    public NoteDto deleteNoteById(final Long id) {
+        final NoteDto noteToRemoveDto = this.getNoteById(id);
+		final Note note = new Note(noteToRemoveDto.getId(),
+								   noteToRemoveDto.getText(),
+								   noteToRemoveDto.getCreatedAt(),
+								   noteToRemoveDto.getUpdatedAt());
+
+        noteDao.deleteNote(note);
         
-        noteRepository.deleteNote(id);
-        
-        return ResponseEntity.ok("Note is removed successfully!");
+        return noteToRemoveDto;
     }
 }

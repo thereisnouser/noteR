@@ -1,5 +1,6 @@
-package com.noter.api.auth;
+package com.noter.api.users.dao;
 
+import com.noter.api.users.model.User;
 import static com.noter.api.security.UserRole.ADMIN;
 import static com.noter.api.security.UserRole.GUEST;
 import static com.noter.api.security.UserRole.USER;

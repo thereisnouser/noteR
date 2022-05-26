@@ -1,16 +1,20 @@
-package com.noter.api.notes.repository;
+package com.noter.api.notes.dao;
 
-import com.noter.api.notes.model.Note;
+import com.noter.api.notes.entity.Note;
 import java.util.List;
 import javax.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class NoteRepositoryImpl implements NoteRepository {
+public class PostgreSQLNoteDao implements NoteDao {
     
+    private final EntityManager entityManager;
+
     @Autowired
-    private EntityManager entityManager;
+	public PostgreSQLNoteDao(final EntityManager entityManager) {
+		this.entityManager = entityManager;
+	}
     
     @Override
     public List<Note> getAllNotes() {
@@ -18,7 +22,7 @@ public class NoteRepositoryImpl implements NoteRepository {
     }
     
     @Override
-    public Note getNote(final int id) {
+    public Note getNoteById(final Long id) {
         return entityManager.find(Note.class, id);
     }
     
@@ -33,8 +37,7 @@ public class NoteRepositoryImpl implements NoteRepository {
     }
     
     @Override
-    public void deleteNote(final int id) {
-        Note note = this.getNote(id);
+    public void deleteNote(final Note note) {
         entityManager.remove(note);
     }
 }

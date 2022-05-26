@@ -1,18 +1,17 @@
 package com.noter.api.notes.service;
 
-import com.noter.api.notes.model.Note;
+import com.noter.api.notes.dto.NoteDto;
 import java.util.List;
-import org.springframework.http.ResponseEntity;
 
 public interface NoteService {
         
-    public List<Note> getAllNotes();
+    List<NoteDto> getAllNotes();
     
-    public Note getNote(final int id);
+    NoteDto getNoteById(final Long id);
     
-    public ResponseEntity createNote(final Note note);
+    NoteDto createNote(final NoteDto noteDto);
     
-    public ResponseEntity updateNote(final Note note);
+    NoteDto updateNote(final NoteDto noteDto);
     
-    public ResponseEntity deleteNote(final int id);
+    NoteDto deleteNoteById(final Long id);
 }

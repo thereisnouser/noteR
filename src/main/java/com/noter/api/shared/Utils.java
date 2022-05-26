@@ -1,4 +1,4 @@
-package com.noter.util;
+package com.noter.api.shared;
 
 public class Utils {
     
