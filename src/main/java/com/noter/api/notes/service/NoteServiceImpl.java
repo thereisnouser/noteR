@@ -5,6 +5,7 @@ import com.noter.api.notes.dto.NoteDto;
 import com.noter.api.notes.entity.Note;
 import com.noter.api.notes.exception.BadRequestException;
 import com.noter.api.notes.exception.NoteNotFoundException;
+import com.noter.api.shared.Utils;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
@@ -50,20 +51,28 @@ public class NoteServiceImpl implements NoteService {
 
     @Override
     public NoteDto createNote(final NoteDto noteDto) {
+        if (checkIfDtoTextIsNullOrEmpty(noteDto)) {
+            throw new BadRequestException("You can't create a note with empty 'text'");
+        }
+
         final LocalDateTime currentUTCDateTime = LocalDateTime.now(ZoneOffset.UTC);
         final Note note = new Note(noteDto.getText(), currentUTCDateTime, currentUTCDateTime);
 
         noteDao.createNote(note);
 
-        return noteDto;
+        return new NoteDto(note);
     }
 
     @Override
     public NoteDto updateNote(final NoteDto noteDto) {
+        if (checkIfDtoTextIsNullOrEmpty(noteDto)) {
+            throw new BadRequestException("You can't set empty 'text'");
+        }
+
         final Long id = noteDto.getId();
         final NoteDto noteToUpdateDto = this.getNoteById(id);
         final LocalDateTime currentUTCDateTime = LocalDateTime.now(ZoneOffset.UTC);
-        final Note note = new Note(noteDto.getId(),
+        final Note note = new Note(id,
                                    noteDto.getText(),
                                    noteToUpdateDto.getCreatedAt(),
                                    currentUTCDateTime);
@@ -76,13 +85,14 @@ public class NoteServiceImpl implements NoteService {
     @Override
     public NoteDto deleteNoteById(final Long id) {
         final NoteDto noteToRemoveDto = this.getNoteById(id);
-        final Note note = new Note(noteToRemoveDto.getId(),
-                                   noteToRemoveDto.getText(),
-                                   noteToRemoveDto.getCreatedAt(),
-                                   noteToRemoveDto.getUpdatedAt());
+        final Note note = new Note(noteToRemoveDto);
 
         noteDao.deleteNote(note);
 
         return noteToRemoveDto;
+    }
+
+    private boolean checkIfDtoTextIsNullOrEmpty(final NoteDto dto) {
+        return dto == null || Utils.isNullOrEmpty(dto.getText());
     }
 }
