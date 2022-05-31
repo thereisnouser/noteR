@@ -1,6 +1,8 @@
 package com.noter.api.notes.entity;
 
+import com.noter.api.notes.dto.NoteDto;
 import java.time.LocalDateTime;
+import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -47,6 +49,13 @@ public class Note {
         this.updatedAt = updatedAt;
     }
 
+    public Note(final NoteDto dto) {
+        this.id = dto.getId();
+        this.text = dto.getText();
+        this.createdAt = dto.getCreatedAt();
+        this.updatedAt = dto.getUpdatedAt();
+    }
+
     public Long getId() {
         return id;
     }
@@ -86,5 +95,38 @@ public class Note {
                + ", text=" + text
                + ", createdAt=" + createdAt
                + ", updatedAt=" + updatedAt + '}';
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 59 * hash + Objects.hashCode(this.id);
+        hash = 59 * hash + Objects.hashCode(this.text);
+        hash = 59 * hash + Objects.hashCode(this.createdAt);
+        hash = 59 * hash + Objects.hashCode(this.updatedAt);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        } else if (obj == null) {
+            return false;
+        } else if (getClass() != obj.getClass()) {
+            return false;
+        }
+
+        final Note other = (Note) obj;
+
+        if (!Objects.equals(this.text, other.text)) {
+            return false;
+        } else if (!Objects.equals(this.id, other.id)) {
+            return false;
+        } else if (!Objects.equals(this.createdAt, other.createdAt)) {
+            return false;
+        }
+
+        return Objects.equals(this.updatedAt, other.updatedAt);
     }
 }
