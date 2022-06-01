@@ -222,10 +222,10 @@ public class NoteServiceImplTest {
 
         // Given
         final Long id = 1L;
-        final LocalDateTime customDateTime = LocalDateTime.of(2001, 1, 1, 0, 0, 0);
-        final LocalDateTime currentUTCDateTime = LocalDateTime.now(ZoneOffset.UTC);
-        final NoteDto createdNote = new NoteDto(id, "abc", customDateTime, customDateTime);
-        final NoteDto dto = new NoteDto(id, "cba", currentUTCDateTime, currentUTCDateTime);
+        final LocalDateTime createdNoteDateTime = LocalDateTime.of(2001, 1, 1, 0, 0, 0);
+        final LocalDateTime dtoDateTime = LocalDateTime.of(2002, 1, 1, 0, 0, 0);
+        final NoteDto createdNote = new NoteDto(id, "abc", createdNoteDateTime, createdNoteDateTime);
+        final NoteDto dto = new NoteDto(id, "cba", dtoDateTime, dtoDateTime);
 
         final NoteService spyService = spy(service);
         doReturn(createdNote).when(spyService).getNoteById(id);
