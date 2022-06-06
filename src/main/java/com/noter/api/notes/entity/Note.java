@@ -1,6 +1,5 @@
 package com.noter.api.notes.entity;
 
-import com.noter.api.notes.dto.NoteDto;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import javax.persistence.Column;
@@ -49,13 +48,6 @@ public class Note {
         this.updatedAt = updatedAt;
     }
 
-    public Note(final NoteDto dto) {
-        this.id = dto.getId();
-        this.text = dto.getText();
-        this.createdAt = dto.getCreatedAt();
-        this.updatedAt = dto.getUpdatedAt();
-    }
-
     public Long getId() {
         return id;
     }
@@ -94,7 +86,7 @@ public class Note {
                + "id=" + id
                + ", text=" + text
                + ", createdAt=" + createdAt
-               + ", updatedAt=" + updatedAt + '}';
+               + ", updatedAt=" + updatedAt + "}";
     }
 
     @Override
@@ -108,7 +100,7 @@ public class Note {
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         if (this == obj) {
             return true;
         } else if (obj == null) {
@@ -126,7 +118,6 @@ public class Note {
         } else if (!Objects.equals(this.createdAt, other.createdAt)) {
             return false;
         }
-
         return Objects.equals(this.updatedAt, other.updatedAt);
     }
 }
