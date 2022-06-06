@@ -63,7 +63,7 @@ public class NoteController {
         return createSuccessResponseWithData(removedNote);
     }
 
-    public ResponseEntity createSuccessResponseWithData(final List<Note> data) {
+    private ResponseEntity createSuccessResponseWithData(final List<Note> data) {
         final NoteResponseDto response = new NoteResponseDto(HttpStatus.OK, "Success", data);
         return new ResponseEntity(response, HttpStatus.OK);
     }

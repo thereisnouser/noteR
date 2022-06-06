@@ -1,3 +1,3 @@
 # noteR
 
-Spring Boot + Angular Web Application
+Twitter-like web application using Spring Boot and Angular
