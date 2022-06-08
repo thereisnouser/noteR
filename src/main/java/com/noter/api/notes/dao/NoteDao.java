@@ -7,11 +7,11 @@ public interface NoteDao {
     
     List<Note> getAllNotes();
     
-    Note getNoteById(final Long id);
+    Note getNoteById(Long id);
     
-    void createNote(final Note note);
+    void createNote(Note note);
     
-    void updateNote(final Note note);
+    void updateNote(Note note);
     
-    void deleteNote(final Note note);
+    void deleteNote(Note note);
 }

@@ -81,15 +81,6 @@ public class Note {
     }
 
     @Override
-    public String toString() {
-        return "NoteEntity{"
-               + "id=" + id
-               + ", text=" + text
-               + ", createdAt=" + createdAt
-               + ", updatedAt=" + updatedAt + "}";
-    }
-
-    @Override
     public int hashCode() {
         int hash = 7;
         hash = 59 * hash + Objects.hashCode(this.id);
@@ -119,5 +110,14 @@ public class Note {
             return false;
         }
         return Objects.equals(this.updatedAt, other.updatedAt);
+    }
+
+    @Override
+    public String toString() {
+        return "Note{"
+                + "id=" + id
+                + ", text=" + text
+                + ", createdAt=" + createdAt
+                + ", updatedAt=" + updatedAt + "}";
     }
 }
