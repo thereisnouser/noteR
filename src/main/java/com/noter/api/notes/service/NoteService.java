@@ -1,83 +1,84 @@
 package com.noter.api.notes.service;
 
 import com.noter.api.notes.dao.NoteDao;
-import com.noter.api.notes.dto.NoteRequestDto;
+import com.noter.api.notes.dto.NoteCreateDto;
+import com.noter.api.notes.dto.NoteResponseDto;
+import com.noter.api.notes.dto.NoteUpdateDto;
 import com.noter.api.notes.entity.Note;
-import com.noter.api.notes.exception.BadRequestException;
 import com.noter.api.notes.exception.NoteNotFoundException;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.transaction.Transactional;
-import javax.validation.Valid;
-import javax.validation.constraints.Min;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.annotation.Validated;
 
 @Service
 @Transactional
-@Validated
 public class NoteService {
 
-    private final NoteDao noteDao;
+    private final NoteDao dao;
 
     @Autowired
-    public NoteService(final NoteDao noteDao) {
-        this.noteDao = noteDao;
+    public NoteService(final NoteDao dao) {
+        this.dao = dao;
     }
 
-    public List<Note> getAllNotes() {
-        return noteDao.getAllNotes();
+    public List<NoteResponseDto> getAllNotes() {
+        return dao
+                .getAllNotes()
+                .stream()
+                .map(NoteResponseDto::new)
+                .collect(Collectors.toList());
     }
 
-    public List<Note> getNoteById(@Min(1) final Long id) {
-        return Arrays.asList(findNoteByIdOrThrowException(id));
+    public List<NoteResponseDto> getNoteById(final Long id) {
+        final Note note = findNoteByIdOrThrowException(id);
+        return createListWithEntityMappedToDto(note);
     }
 
-    public List<Note> createNote(@Valid final NoteRequestDto noteDto) {
+    public List<NoteResponseDto> createNote(final NoteCreateDto dto) {
         final LocalDateTime currentUTCDateTime = LocalDateTime.now(ZoneOffset.UTC);
-        final Note note = new Note(noteDto.getText(), currentUTCDateTime, currentUTCDateTime);
+        final Note createdNote = new Note(dto.getText(), currentUTCDateTime, currentUTCDateTime);
 
-        noteDao.createNote(note);
+        dao.createNote(createdNote);
 
-        return Arrays.asList(note);
+        return createListWithEntityMappedToDto(createdNote);
     }
 
-    public List<Note> updateNote(@Valid final NoteRequestDto noteDto) {
-        final Long dtoId = noteDto.getId();
-        if (dtoId == null) {
-            throw new BadRequestException("Field 'id' can not be empty");
-        }
-
-        final Note noteToUpdateDto = findNoteByIdOrThrowException(dtoId);
+    public List<NoteResponseDto> updateNote(final NoteUpdateDto dto) {
+        final Note noteToUpdate = findNoteByIdOrThrowException(dto.getId());
         final LocalDateTime currentUTCDateTime = LocalDateTime.now(ZoneOffset.UTC);
+        final Note updatedNote = new Note(dto.getId(),
+                                          dto.getText(),
+                                          noteToUpdate.getCreatedAt(),
+                                          currentUTCDateTime);
 
-        final Note note = new Note(dtoId,
-                                   noteDto.getText(),
-                                   noteToUpdateDto.getCreatedAt(),
-                                   currentUTCDateTime);
-        noteDao.updateNote(note);
+        dao.updateNote(updatedNote);
 
-        return Arrays.asList(note);
+        return createListWithEntityMappedToDto(updatedNote);
     }
 
-    public List<Note> deleteNoteById(@Min(1) final Long id) {
+    public List<NoteResponseDto> deleteNoteById(final Long id) {
         final Note noteToRemove = findNoteByIdOrThrowException(id);
+        dao.deleteNote(noteToRemove);
 
-        noteDao.deleteNote(noteToRemove);
-
-        return Arrays.asList(noteToRemove);
+        return createListWithEntityMappedToDto(noteToRemove);
     }
 
     private Note findNoteByIdOrThrowException(final Long id) {
-        final Note note = noteDao.getNoteById(id);
+        final Note note = dao.getNoteById(id);
 
         if (note == null) {
-            throw new NoteNotFoundException("Note with id = " + id + " is not found");
+            throw new NoteNotFoundException("Note with 'id' = " + id + " is not found");
         }
 
         return note;
+    }
+
+    private List<NoteResponseDto> createListWithEntityMappedToDto(final Note entity) {
+        return List.of(new NoteResponseDto(entity));
     }
 }

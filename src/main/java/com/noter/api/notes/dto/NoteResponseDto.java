@@ -1,70 +1,81 @@
 package com.noter.api.notes.dto;
 
 import com.noter.api.notes.entity.Note;
-import java.util.ArrayList;
-import java.util.List;
+
+import java.time.LocalDateTime;
 import java.util.Objects;
-import org.springframework.http.HttpStatus;
 
 public class NoteResponseDto {
 
-    private int status;
-    private String message;
-    private List<Note> data;
+    private Long id;
+    private String text;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
     public NoteResponseDto() {
     }
 
-    public NoteResponseDto(final HttpStatus status,
-                           final String message,
-                           final List<Note> data) {
-        this.status = status.value();
-        this.message = message;
-        this.data = data;
+    public NoteResponseDto(final Long id,
+                           final String text,
+                           final LocalDateTime createdAt,
+                           final LocalDateTime updatedAt) {
+        this.id = id;
+        this.text = text;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 
-    public NoteResponseDto(final HttpStatus status,
-                           final String message) {
-        this.status = status.value();
-        this.message = message;
-        this.data = new ArrayList<>();
+    public NoteResponseDto(final Note entity) {
+        this.id = entity.getId();
+        this.text = entity.getText();
+        this.createdAt = entity.getCreatedAt();
+        this.updatedAt = entity.getUpdatedAt();
     }
 
-    public int getStatus() {
-        return status;
+    public Long getId() {
+        return id;
     }
 
-    public void setStatus(HttpStatus status) {
-        this.status = status.value();
+    public void setId(final Long id) {
+        this.id = id;
     }
 
-    public String getMessage() {
-        return message;
+    public String getText() {
+        return text;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
+    public void setText(final String text) {
+        this.text = text;
     }
 
-    public List<Note> getData() {
-        return data;
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 
-    public void setData(List<Note> data) {
-        this.data = data;
+    public void setCreatedAt(final LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(final LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
     }
 
     @Override
     public int hashCode() {
-        int hash = 3;
-        hash = 29 * hash + this.status;
-        hash = 29 * hash + Objects.hashCode(this.message);
-        hash = 29 * hash + Objects.hashCode(this.data);
+        int hash = 7;
+        hash = 59 * hash + Objects.hashCode(this.id);
+        hash = 59 * hash + Objects.hashCode(this.text);
+        hash = 59 * hash + Objects.hashCode(this.createdAt);
+        hash = 59 * hash + Objects.hashCode(this.updatedAt);
         return hash;
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         if (this == obj) {
             return true;
         } else if (obj == null) {
@@ -75,16 +86,22 @@ public class NoteResponseDto {
 
         final NoteResponseDto other = (NoteResponseDto) obj;
 
-        if (this.status != other.status) {
+        if (!Objects.equals(this.text, other.text)) {
             return false;
-        } else if (!Objects.equals(this.message, other.message)) {
+        } else if (!Objects.equals(this.id, other.id)) {
+            return false;
+        } else if (!Objects.equals(this.createdAt, other.createdAt)) {
             return false;
         }
-        return Objects.equals(this.data, other.data);
+        return Objects.equals(this.updatedAt, other.updatedAt);
     }
 
     @Override
     public String toString() {
-        return "NoteResponseDto{" + "status=" + status + ", message=" + message + ", data=" + data + "}";
+        return "NoteResponseDto{"
+                + "id=" + id
+                + ", text=" + text
+                + ", createdAt=" + createdAt
+                + ", updatedAt=" + updatedAt + "}";
     }
 }

@@ -18,7 +18,7 @@ public class PostgreSQLNoteDao implements NoteDao {
 
     @Override
     public List<Note> getAllNotes() {
-        return entityManager.createQuery("FROM Note").getResultList();
+        return entityManager.createQuery("SELECT note FROM Note note").getResultList();
     }
 
     @Override

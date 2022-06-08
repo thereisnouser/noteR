@@ -15,28 +15,28 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 public enum UserRole {
 
-    GUEST(new HashSet<UserPermission>(Arrays.asList(
-        NOTE_READ,
-        USER_READ,
-        USER_CREATE
+    GUEST(new HashSet<>(Arrays.asList(
+            NOTE_READ,
+            USER_READ,
+            USER_CREATE
     ))),
-    USER(new HashSet<UserPermission>(Arrays.asList(
-        NOTE_READ,
-        NOTE_CREATE,
-        NOTE_UPDATE,
-        USER_READ
+    USER(new HashSet<>(Arrays.asList(
+            NOTE_READ,
+            NOTE_CREATE,
+            NOTE_UPDATE,
+            USER_READ
     ))),
-    ADMIN(new HashSet<UserPermission>(Arrays.asList(
-        NOTE_READ,
-        NOTE_DELETE,
-        USER_READ,
-        USER_CREATE,
-        USER_DELETE
+    ADMIN(new HashSet<>(Arrays.asList(
+            NOTE_READ,
+            NOTE_DELETE,
+            USER_READ,
+            USER_CREATE,
+            USER_DELETE
     )));
 
-    private Set<UserPermission> permissions;
+    private final Set<UserPermission> permissions;
 
-    private UserRole(final Set<UserPermission> permissions) {
+    UserRole(final Set<UserPermission> permissions) {
         this.permissions = permissions;
     }
 

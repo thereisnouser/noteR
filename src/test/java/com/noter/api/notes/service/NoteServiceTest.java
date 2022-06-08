@@ -1,24 +1,27 @@
 package com.noter.api.notes.service;
 
 import com.noter.api.notes.dao.NoteDao;
-import com.noter.api.notes.dto.NoteRequestDto;
+import com.noter.api.notes.dto.NoteCreateDto;
+import com.noter.api.notes.dto.NoteResponseDto;
+import com.noter.api.notes.dto.NoteUpdateDto;
 import com.noter.api.notes.entity.Note;
-import com.noter.api.notes.exception.BadRequestException;
 import com.noter.api.notes.exception.NoteNotFoundException;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
-import java.util.Arrays;
-import java.util.List;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
-import static org.mockito.BDDMockito.given;
 import org.mockito.Mock;
-import static org.mockito.Mockito.verify;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.util.Arrays;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 public class NoteServiceTest {
@@ -43,27 +46,28 @@ public class NoteServiceTest {
         given(dao.getAllNotes()).willReturn(Arrays.asList(note1, note2));
 
         // When
-        final List<Note> result = service.getAllNotes();
+        final List<NoteResponseDto> result = service.getAllNotes();
 
         // Then
-        assertThat(result).hasOnlyElementsOfType(Note.class);
+        assertThat(result).hasSize(2);
     }
 
     @Test
-    void getNoteById_noteWithIdParameterDoesNotExist_throwsNoteNotFoundException() {
+    void getNoteById_noteWithIdAsParameterDoesNotExist_throwsNoteNotFoundException() {
 
         // Given
         final Long id = 1L;
+        given(dao.getNoteById(id)).willReturn(null);
 
         // When
         // Then
         assertThatThrownBy(() -> service.getNoteById(id))
-            .isInstanceOf(NoteNotFoundException.class)
-            .hasMessageContaining("Note with id = " + id + " is not found");
+                .isInstanceOf(NoteNotFoundException.class)
+                .hasMessageContaining("Note with 'id' = " + id + " is not found");
     }
 
     @Test
-    void getNoteById_noteWithIdParameterIsExist_returnsListWithRequiredIdNote() {
+    void getNoteById_noteWithIdAsParameterDoesExist_returnsListWithRequiredIdNote() {
 
         // Given
         final Long id = 1L;
@@ -73,17 +77,17 @@ public class NoteServiceTest {
         given(dao.getNoteById(id)).willReturn(note);
 
         // When
-        final List<Note> result = service.getNoteById(id);
+        final List<NoteResponseDto> result = service.getNoteById(id);
 
         // Then
-        assertThat(result).isEqualTo(Arrays.asList(note));
+        assertThat(result).isEqualTo(createListWithEntityMappedToDto(note));
     }
 
     @Test
-    void createNote_dtoAsParameterIsNotNull_createdAtAndUpdatedAtFieldsAreFilledWithNotNullValue() {
+    void createNote_dtoAsParameterIsNotNull_createdAtAndUpdatedAtFieldsAreEqualAndNotNull() {
 
         // Given
-        final NoteRequestDto dto = new NoteRequestDto("text");
+        final NoteCreateDto dto = new NoteCreateDto("text");
 
         // When
         service.createNote(dto);
@@ -99,13 +103,27 @@ public class NoteServiceTest {
     }
 
     @Test
+    void updateNote_noteWithIdAsParameterDoesNotExist_throwsNoteNotFoundException() {
+
+        // Given
+        final Long id = 1L;
+        given(dao.getNoteById(id)).willReturn(null);
+
+        // When
+        // Then
+        assertThatThrownBy(() -> service.getNoteById(id))
+                .isInstanceOf(NoteNotFoundException.class)
+                .hasMessageContaining("Note with 'id' = " + id + " is not found");
+    }
+
+    @Test
     void updateNote_createdNoteWithId1_updatedAtFieldOfCreatedNoteIsUpdated() {
 
         // Given
         final Long id = 1L;
         final LocalDateTime createdNoteDateTime = LocalDateTime.of(2001, 1, 1, 0, 0, 0);
         final Note createdNote = new Note(id, "abc", createdNoteDateTime, createdNoteDateTime);
-        final NoteRequestDto dto = new NoteRequestDto(id, "cba");
+        final NoteUpdateDto dto = new NoteUpdateDto(id, "cba");
 
         given(dao.getNoteById(id)).willReturn(createdNote);
 
@@ -123,28 +141,20 @@ public class NoteServiceTest {
     }
 
     @Test
-    void updateNote_dtoIdIsNull_throwsBadRequestException() {
-
-        // Given
-        final NoteRequestDto dto = new NoteRequestDto("text");
-
-        // When
-        // Then
-        assertThatThrownBy(() -> service.updateNote(dto))
-            .isInstanceOf(BadRequestException.class)
-            .hasMessageContaining("Field 'id' can not be empty");
-    }
-
-    @Test
     void deleteNote_noteWithIdAsParameterIsNotExist_throwsNoteNotFoundException() {
 
         // Given
         final Long id = 1L;
+        given(dao.getNoteById(id)).willReturn(null);
 
         // When
         // Then
         assertThatThrownBy(() -> service.deleteNoteById(id))
-            .isInstanceOf(NoteNotFoundException.class)
-            .hasMessageContaining("Note with id = " + id + " is not found");
+                .isInstanceOf(NoteNotFoundException.class)
+                .hasMessageContaining("Note with 'id' = " + id + " is not found");
+    }
+
+    private List<NoteResponseDto> createListWithEntityMappedToDto(final Note entity) {
+        return List.of(new NoteResponseDto(entity));
     }
 }

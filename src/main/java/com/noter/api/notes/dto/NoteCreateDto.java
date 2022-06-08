@@ -1,35 +1,18 @@
 package com.noter.api.notes.dto;
 
 import java.util.Objects;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 
-public class NoteRequestDto {
-
-    @Min(1)
-    private Long id;
+public class NoteCreateDto {
 
     @NotBlank
     private String text;
 
-    public NoteRequestDto() {
+    public NoteCreateDto() {
     }
 
-    public NoteRequestDto(final Long id, final String text) {
-        this.id = id;
+    public NoteCreateDto(final String text) {
         this.text = text;
-    }
-
-    public NoteRequestDto(final String text) {
-        this.text = text;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getText() {
@@ -43,7 +26,6 @@ public class NoteRequestDto {
     @Override
     public int hashCode() {
         int hash = 5;
-        hash = 79 * hash + Objects.hashCode(this.id);
         hash = 79 * hash + Objects.hashCode(this.text);
         return hash;
     }
@@ -58,16 +40,13 @@ public class NoteRequestDto {
             return false;
         }
 
-        final NoteRequestDto other = (NoteRequestDto) obj;
+        final NoteCreateDto other = (NoteCreateDto) obj;
 
-        if (!Objects.equals(this.text, other.text)) {
-            return false;
-        }
-        return Objects.equals(this.id, other.id);
+        return Objects.equals(this.text, other.text);
     }
 
     @Override
     public String toString() {
-        return "NoteRequestDto{" + "id=" + id + ", text=" + text + "}";
+        return "NoteCreateDto{" + "text=" + text + "}";
     }
 }
